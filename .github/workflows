@@ -1,1 +1,29 @@
+name: MA7 Bullish Cross Scanner
+
+on:
+  schedule:
+    - cron: "0 * * * *"  # Jalan tiap 1 jam
+  workflow_dispatch:     # Bisa dijalankan manual dari GitHub
+
+jobs:
+  run-script:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v3
+
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: "3.10"
+
+    - name: Install dependencies
+      run: pip install -r requirements.txt
+
+    - name: Run MA7 Bullish Cross Scanner
+      env:
+        TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+        TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+      run: python ma7_bullish_cross.py
 
