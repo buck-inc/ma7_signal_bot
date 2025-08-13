@@ -1,0 +1,33 @@
+name: MA7 Signal Bot
+
+on:
+  schedule:
+    - cron: "*/15 * * * *"  # tiap 15 menit
+  workflow_dispatch:
+
+jobs:
+  run-bot:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Run bot
+        env:
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+          SYMBOL: ${{ secrets.SYMBOL }}
+          INTERVAL: ${{ secrets.INTERVAL }}
+          LOOKBACK: ${{ secrets.LOOKBACK }}
+        run: |
+          python src/ma7_bot.py
